@@ -1,0 +1,12 @@
+# Ignore Jetbrains files
+.idea
+
+# Ignore temporary files
+*~
+
+# Ignore mac files
+.DS_Store
+
+# Ignore remote-sync
+.remote-sync.json
+
