@@ -33,3 +33,7 @@ asset LandTitle identified by id {
   --> Individual owner
   --> Individual[] previousOwners
 }
+
+transaction UnlockLandTitle {
+  --> LandTitle landTitle
+}
