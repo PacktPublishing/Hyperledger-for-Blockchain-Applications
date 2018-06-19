@@ -1,3 +1,40 @@
+rule ParticipantCanUpdateSelf {
+  	description: "Participants can update their own data"
+  	participant(p): "org.hyperledger.composer.system.Participant"
+  	operation: UPDATE
+    resource(r): "org.hyperledger.composer.system.Participant"
+  	condition: (r.getIdentifier() == p.getIdentifier())
+  	action: ALLOW
+}
+
+rule LandTitleOwnerCanUnlock {
+    description: "Current owner of landTitle can unlock it to be on sale"
+    participant(p): "org.landreg.Individual"
+    operation: UPDATE
+    resource(r): "org.landreg.LandTitle"
+    transaction(tx): "org.landreg.UnlockLandTitle"
+    condition: (r.owner.getIdentifier() == p.getIdentifier())
+    action: ALLOW
+}
+
+rule LandTitleOwnerCanTransfer {
+    description: "Current owner of landTitle can transfer it to another individual"
+    participant(p): "org.landreg.Individual"
+    operation: UPDATE
+    resource(r): "org.landreg.LandTitle"
+    transaction(tx): "org.landreg.TransferLandTitle"
+    condition: (r.owner.getIdentifier() == p.getIdentifier())
+    action: ALLOW
+}
+
+rule EveryoneCanSeeResources {
+    description: "Everyone can read all resources in the org.landreg namespace"
+    participant: "ANY"
+    operation: READ
+    resource: "org.landreg.*"
+    action: ALLOW
+}
+
 rule NetworkAdminUser {
     description: "Grant business network administrators full access to user resources"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
