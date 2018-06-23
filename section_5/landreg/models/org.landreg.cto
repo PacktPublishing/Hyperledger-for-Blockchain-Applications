@@ -31,7 +31,7 @@ asset LandTitle identified by id {
   o Boolean forSale default=false
   o Double price optional
   --> Individual owner
-  --> Individual[] previousOwners
+  --> Individual[] previousOwners optional
 }
 
 transaction UnlockLandTitle {
