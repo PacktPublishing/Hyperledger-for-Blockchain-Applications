@@ -1,0 +1,31 @@
+query ListLandTitlesForSale {
+    description: "List all land titles that are for sale"
+    statement:
+        SELECT org.landreg.LandTitle
+            WHERE (forSale == true)
+                ORDER BY [id ASC]
+}
+
+query ListLandTitlesBySize {
+    description: "List all land titles in a certain size range"
+    statement:
+        SELECT org.landreg.LandTitle
+           WHERE ((area > _$minimumArea) AND (area < _$maximumArea))
+                ORDER BY [area ASC]
+}
+
+query ListOwnedLandTitles {
+    description: "List land titles owned by specified 'owner'"
+    statement:
+        SELECT org.landreg.LandTitle
+            WHERE (owner == _$owner)
+                ORDER BY [id ASC]
+}
+
+query ListPreviouslyOwnedLandTitles {
+    description: "List land titles previously owned by specified 'previousOwner'"
+    statement:
+        SELECT org.landreg.LandTitle
+            WHERE (previousOwners CONTAINS _$previousOwner)
+                ORDER BY [id ASC]
+}
