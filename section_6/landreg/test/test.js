@@ -203,7 +203,21 @@ describe('Unit tests', () => {
                 expect(storedLandTitle.previousOwners[0].getIdentifier()).to.equal(individualA.getIdentifier());
             });
 
-            it('should not transfer locked landTitle');
+            it('should not transfer locked landTitle', async () => {
+                // Create the publish the unlockLandTitle transaction
+                const transferLandTitle = factory.newTransaction(namespace, 'TransferLandTitle');
+                transferLandTitle.landTitle = factory.newRelationship(namespace, 'LandTitle', landTitleB.getIdentifier());
+                transferLandTitle.newOwner = factory.newRelationship(namespace, 'Individual', individualA.getIdentifier());
+
+                // Submit the transaction
+                try {
+                    await businessNetworkConnection.submitTransaction(transferLandTitle);
+                    expect().fail('Should not transfer locked LandTitle');
+                } catch(e) {
+                    // Expected error
+                    expect(e.message).to.equal(`Land Title with id ${landTitleB.getIdentifier()} is not marked for sale`);
+                }
+            });
         });
     });
 
