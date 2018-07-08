@@ -119,7 +119,13 @@ describe('Unit tests', () => {
 
     describe('Individual', () => {
 
-        it('should create several individuals');
+        it('should create several individuals', async () => {
+            // Create the Individuals
+            individualA = createIndividual(factory, fixtures.individuals[0]);
+            individualB = createIndividual(factory, fixtures.individuals[1]);
+
+            await individualRegistry.addAll([individualA, individualB]);
+        });
     });
 
     describe('LandTitle', () => {
