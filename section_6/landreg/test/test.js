@@ -130,7 +130,13 @@ describe('Unit tests', () => {
 
     describe('LandTitle', () => {
 
-        it('should create several landTitles');
+        it('should create several landTitles', async () => {
+            // create the LandTitle
+            landTitleA = createLandTitle(factory, fixtures.landTitles[0], individualA);
+            landTitleB = createLandTitle(factory, fixtures.landTitles[1], individualB);
+
+            await landTitleRegistry.addAll([landTitleA, landTitleB]);
+        });
 
         describe('unlockLandTitle', () => {
 
