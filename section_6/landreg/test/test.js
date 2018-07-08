@@ -223,6 +223,17 @@ describe('Unit tests', () => {
 
     describe('Query', () => {
 
-        it('should list ListLandTitlesBySize, and correctly filter by maximumArea');
+        it('should list ListLandTitlesBySize, and correctly filter by maximumArea', async () => {
+            let queryParams = {
+                minimumArea: 0,
+                maximumArea: 1900
+            };
+            let res = await businessNetworkConnection.query('ListLandTitlesBySize', queryParams);
+
+            // We expect only one of the landTitles to be listed by the query
+            expect(res.length).to.equal(1);
+            // And to only list landTitleA, of area less than 1900
+            expect(res[0].getIdentifier()).to.equal(landTitleA.getIdentifier());
+        });
     });
 });
