@@ -1,0 +1,32 @@
+individuals:
+  - passportNumber: "X01"
+    address:
+      postalCode: 1016 GV
+      addressLine: Prinsengracht 263
+      locality: Amsterdam
+    gender: FEMALE
+  - passportNumber: "X02"
+    address:
+      postalCode: 2517 HV
+      addressLine: Standshouderslaan 41
+      locality: The Hague
+    gender: MALE
+landTitles:
+  - id: "001"
+    address:
+      postalCode: 6211 TC
+      addressLine: Keizer Karelplein 3
+      locality: Maastricht
+    area: 1500
+    forSale: false
+    price: 999.95
+    owner: "X01"
+  - id: "002"
+    address:
+      postalCode: 2611 GS
+      addressLine: Markt 87
+      locality: Delft
+    area: 2000
+    forSale: false
+    price: 999.95
+    owner: "X02"
