@@ -3,7 +3,7 @@
  * Write your transction processor functions here
  */
 
-const NS = 'org.landreg'
+const NS = 'org.landreg';
 
 /**
  * Unlock landTitle so that it can be sold
@@ -49,7 +49,7 @@ async function transferLandTitle(tx) {
     const newOwner = await individualRegistry.get(newOwnerID);
 
     // Check that newOwner is not same as current owner
-    if (newOwnerID == oldOwnerID) {
+    if (newOwnerID === oldOwnerID) {
         throw new Error(`Land Title with id ${tx.landTitle.getIdentifier()} is already owned by ${oldOwnerID}`);
     }
 
