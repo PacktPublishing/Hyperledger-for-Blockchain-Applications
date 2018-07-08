@@ -20,6 +20,72 @@ const adminEnrollmentSecret = 'adminpw';
 const fixtures = yaml.safeLoad(fs.readFileSync(__dirname + '/fixtures.yml', 'utf8'));
 
 describe('Unit tests', () => {
+    let adminConnection;
+    let businessNetworkConnection;
+    let factory;
+    let individualRegistry, landTitleRegistry;
+    let individualA, individualB, landTitleA, landTitleB;
+
+    before(async () => {
+        // In-memory card store for testing so cards are not persisted to the file system
+        const cardStore = require('composer-common').NetworkCardStoreManager.getCardStore( { type: 'composer-wallet-inmemory' } );
+
+        // Embedded connection used for local testing
+        const connectionProfile = {
+            name: 'embedded',
+            'x-type': 'embedded'
+        };
+
+        // Generate certificates for use with the embedded connection
+        const credentials = CertificateUtil.generate({ commonName: adminUserName });
+
+        // PeerAdmin identity used with the admin connection to deploy business networks
+        const deployerMetadata = {
+            version: 1,
+            userName: 'PeerAdmin',
+            roles: [ 'PeerAdmin', 'ChannelAdmin' ]
+        };
+        const deployerCard = new IdCard(deployerMetadata, connectionProfile);
+        deployerCard.setCredentials(credentials);
+
+        const deployerCardName = 'PeerAdmin';
+        adminConnection = new AdminConnection({ cardStore: cardStore });
+
+        // We import the PeerAdmin identity and establish a connection
+        await adminConnection.importCard(deployerCardName, deployerCard);
+        await adminConnection.connect(deployerCardName);
+
+        // Similarly, we create a Business Network connection and network definition
+        businessNetworkConnection = new BusinessNetworkConnection({ cardStore: cardStore });
+        let businessNetworkDefinition = await BusinessNetworkDefinition.fromDirectory(path.resolve(__dirname, '..'));
+
+        // Install the Composer runtime for the new business network
+        await adminConnection.install(businessNetworkDefinition);
+
+        // Start the business network and configure an network admin identity
+        const startOptions = {
+            networkAdmins: [
+                {
+                    userName: adminUserName,
+                    enrollmentSecret: adminEnrollmentSecret
+                }
+            ]
+        };
+
+        const adminCards = await adminConnection.start(businessNetworkDefinition.getName(), businessNetworkDefinition.getVersion(), startOptions);
+
+        // Import the network admin identity for us to use
+        let adminCardName = `${adminUserName}@${businessNetworkDefinition.getName()}`;
+        await adminConnection.importCard(adminCardName, adminCards.get(adminUserName));
+
+        // Connect to the business network using the network admin identity
+        await businessNetworkConnection.connect(adminCardName);
+
+        // Set factory and registries
+        factory = businessNetworkConnection.getBusinessNetwork().getFactory();
+        individualRegistry = await businessNetworkConnection.getParticipantRegistry(namespace + '.Individual');
+        landTitleRegistry = await businessNetworkConnection.getAssetRegistry(namespace + '.LandTitle');
+    });
 
     describe('Individual', () => {
 
