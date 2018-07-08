@@ -1,0 +1,44 @@
+/**
+ * Write your model definitions here
+ */
+
+namespace org.landreg
+
+abstract concept Address {
+  o String addressLine
+  o String locality
+}
+
+concept DutchAddress extends Address {
+  o String postalCode regex=/\d{4}[ ]?[A-Z]{2}/
+}
+
+enum Gender {
+  o FEMALE
+  o MALE
+}
+
+participant Individual identified by passportNumber {
+  o String passportNumber
+  o DutchAddress address
+  o Gender gender
+}
+
+asset LandTitle identified by id {
+  o String id
+  o DutchAddress address
+  o Integer area range=[1000,]
+  o Boolean forSale default=false
+  o Double price optional
+  --> Individual owner
+  --> Individual[] previousOwners optional
+}
+
+transaction UnlockLandTitle {
+  --> LandTitle landTitle
+}
+
+transaction TransferLandTitle {
+  --> LandTitle landTitle
+  --> Individual newOwner
+}

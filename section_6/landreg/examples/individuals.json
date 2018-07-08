@@ -1,0 +1,30 @@
+[
+  {
+    "passportNumber": "X01",
+    "address": {
+      "postalCode": "1016 GV",
+      "addressLine": "Prinsengracht 263",
+      "locality": "Amsterdam"
+    },
+    "gender": "FEMALE"
+  },
+  {
+    "passportNumber": "X02",
+    "address": {
+      "postalCode": "2517 HV",
+      "addressLine": "Standshouderslaan 41",
+      "locality": "The Hague"
+    },
+    "gender": "MALE"
+  },
+  {
+    "passportNumber": "X03",
+    "address": {
+      "postalCode": "2801 JW",
+      "addressLine": "Achter de Kerk 2",
+      "locality": "Gouda"
+    },
+    "gender": "FEMALE"
+  }
+]
+
