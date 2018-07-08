@@ -19,6 +19,36 @@ const adminEnrollmentSecret = 'adminpw';
 
 const fixtures = yaml.safeLoad(fs.readFileSync(__dirname + '/fixtures.yml', 'utf8'));
 
+/**
+ * createIndividual
+ */
+function createIndividual(factory, data) {
+    const individual = factory.newResource(namespace, 'Individual', data.passportNumber);
+    individual.address = factory.newConcept(namespace, 'DutchAddress');
+    individual.address.postalCode = data.address.postalCode;
+    individual.address.addressLine = data.address.addressLine;
+    individual.address.locality = data.address.locality;
+    individual.gender = data.gender;
+    return individual;
+}
+
+/**
+ * createLandTitle
+ */
+function createLandTitle(factory, data, owner) {
+    const landTitle = factory.newResource(namespace, 'LandTitle',  data.id);
+    landTitle.address = factory.newConcept(namespace, 'DutchAddress');
+    landTitle.owner = factory.newRelationship(namespace, 'Individual', owner.getIdentifier());
+    landTitle.address.postalCode = data.address.postalCode;
+    landTitle.address.addressLine = data.address.addressLine;
+    landTitle.address.locality = data.address.locality;
+    landTitle.area = data.area;
+    landTitle.forSale = data.forSale;
+    landTitle.price = data.price;
+    landTitle.previousOwners = data.previousOwners || [];
+    return landTitle;
+}
+
 describe('Unit tests', () => {
     let adminConnection;
     let businessNetworkConnection;
