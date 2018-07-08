@@ -171,7 +171,21 @@ describe('Unit tests', () => {
 
         describe('transferLandTitle', () => {
 
-            it('should not transfer landTitle when newOwner is equal to current owner');
+            it('should not transfer landTitle when newOwner is equal to current owner', async () => {
+                // Create the publish the unlockLandTitle transaction
+                const transferLandTitle = factory.newTransaction(namespace, 'TransferLandTitle');
+                transferLandTitle.landTitle = factory.newRelationship(namespace, 'LandTitle', landTitleA.getIdentifier());
+                transferLandTitle.newOwner = factory.newRelationship(namespace, 'Individual', individualA.getIdentifier());
+
+                // Submit the transaction
+                try {
+                    await businessNetworkConnection.submitTransaction(transferLandTitle);
+                    expect().fail('Should not transfer LandTitle to current owner');
+                } catch(e) {
+                    // Expected error
+                    expect(e.message).to.equal(`Land Title with id ${landTitleA.getIdentifier()} is already owned by ${landTitleA.owner.getIdentifier()}`);
+                }
+            });
 
             it('should transfer unlocked landTitle');
 
