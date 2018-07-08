@@ -187,7 +187,21 @@ describe('Unit tests', () => {
                 }
             });
 
-            it('should transfer unlocked landTitle');
+            it('should transfer unlocked landTitle', async () => {
+                // Create the publish the unlockLandTitle transaction
+                const transferLandTitle = factory.newTransaction(namespace, 'TransferLandTitle');
+                transferLandTitle.landTitle = factory.newRelationship(namespace, 'LandTitle', landTitleA.getIdentifier());
+                transferLandTitle.newOwner = factory.newRelationship(namespace, 'Individual', individualB.getIdentifier());
+
+                // Submit the transaction
+                await businessNetworkConnection.submitTransaction(transferLandTitle);
+
+                // get the landTitle and check if it's unlocked
+                const storedLandTitle = await landTitleRegistry.get(landTitleA.getIdentifier());
+                expect(storedLandTitle.forSale).to.be.false();
+                expect(storedLandTitle.owner.getIdentifier()).to.equal(individualB.getIdentifier());
+                expect(storedLandTitle.previousOwners[0].getIdentifier()).to.equal(individualA.getIdentifier());
+            });
 
             it('should not transfer locked landTitle');
         });
