@@ -140,7 +140,18 @@ describe('Unit tests', () => {
 
         describe('unlockLandTitle', () => {
 
-            it('should unlock locked landTitle');
+            it('should unlock locked landTitle', async () => {
+                // Create the publish the unlockLandTitle transaction
+                const unlockLandTitle = factory.newTransaction(namespace, 'UnlockLandTitle');
+                unlockLandTitle.landTitle = factory.newRelationship(namespace, 'LandTitle', landTitleA.getIdentifier());
+
+                // Submit the transaction
+                await businessNetworkConnection.submitTransaction(unlockLandTitle);
+
+                // get the landTitle and check if it's unlocked
+                const storedLandTitle = await landTitleRegistry.get(landTitleA.getIdentifier());
+                expect(storedLandTitle.forSale).to.be.true();
+            });
 
             it('should not unlock unlocked landTitle');
         });
