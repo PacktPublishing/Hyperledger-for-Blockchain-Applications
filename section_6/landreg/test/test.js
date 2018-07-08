@@ -153,7 +153,20 @@ describe('Unit tests', () => {
                 expect(storedLandTitle.forSale).to.be.true();
             });
 
-            it('should not unlock unlocked landTitle');
+            it('should not unlock unlocked landTitle', async () => {
+                // Create the publish the unlockLandTitle transaction
+                const unlockLandTitle = factory.newTransaction(namespace, 'UnlockLandTitle');
+                unlockLandTitle.landTitle = factory.newRelationship(namespace, 'LandTitle', landTitleA.getIdentifier());
+
+                // Submit the transaction
+                try {
+                    await businessNetworkConnection.submitTransaction(unlockLandTitle);
+                    expect().fail('Should not unlock unlocked LandTitle');
+                } catch(e) {
+                    // Expected error
+                    expect(e.message).to.equal(`Land Title with id ${landTitleA.getIdentifier()} is already unlocked for sale`);
+                }
+            });
         });
 
         describe('transferLandTitle', () => {
